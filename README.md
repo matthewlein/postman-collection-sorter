@@ -18,3 +18,4 @@ Sorted collection saved to: ./path/to/your/API.postman_collection.sorted.json
 ```
 
 4. In Postman, import the new sorted JSON file.
+1. Enjoy that sweet sweet alphabetical sorting.

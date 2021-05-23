@@ -5,6 +5,11 @@ import _ from 'lodash';
 
 const args = process.argv.slice(2);
 const filePath = args[0];
+
+if (!filePath) {
+  console.error('Error: Must provide filepath');
+  process.exit(1);
+}
 const outputPath = filePath.replace('.json', '.sorted.json');
 
 console.log('Sorting collection file: ', filePath);
@@ -18,27 +23,45 @@ interface PostmanRequest {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   };
 }
+interface PostmanFolder {
+  name: string;
+  item: PostmanRequest | PostmanFolder;
+}
 
-const requests = json.item as PostmanRequest[];
 const verbMap = {
-  GET: 0,
-  POST: 1,
-  PUT: 2,
-  DELETE: 3,
+  GET: 1,
+  POST: 2,
+  PUT: 3,
+  DELETE: 4,
 };
 
-const requestsSorted = _.sortBy(requests, (request: PostmanRequest) => {
-  return [request.name, verbMap[request.request.method]];
-});
+function isRequest(
+  item: PostmanRequest | PostmanFolder
+): item is PostmanRequest {
+  return (item as PostmanRequest).request !== undefined;
+}
 
-const newJson = {
-  ...json,
-  item: requestsSorted,
+const sortItems = (obj) => {
+  if (obj.item == null) {
+    return obj;
+  }
+
+  const itemSorted = _.sortBy(
+    obj.item,
+    (item: PostmanRequest | PostmanFolder) => {
+      const verbSort = isRequest(item) ? verbMap[item.request.method] : 0;
+      return [item.name, verbSort];
+    }
+  );
+
+  return {
+    ...obj,
+    item: itemSorted.map(sortItems),
+  };
 };
 
-fs.writeFileSync(
-  filePath.replace('.json', '.sorted.json'),
-  JSON.stringify(newJson)
-);
+const newJson = sortItems(json);
+
+fs.writeFileSync(outputPath, JSON.stringify(newJson));
 
 console.log(`Sorting Successful!\nSorted collection saved to: ${outputPath}`);

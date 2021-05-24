@@ -50,7 +50,7 @@ const sortItems = (obj) => {
     obj.item,
     (item: PostmanRequest | PostmanFolder) => {
       const verbSort = isRequest(item) ? verbMap[item.request.method] : 0;
-      return [item.name, verbSort];
+      return [item.name.toLowerCase(), verbSort];
     }
   );
 

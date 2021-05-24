@@ -125,6 +125,15 @@
 			"response": []
 		},
 		{
+			"name": "Auth",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
 			"name": "users",
 			"request": {
 				"method": "GET",
@@ -135,6 +144,15 @@
 		},
 		{
 			"name": "bikes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Bikes",
 			"request": {
 				"method": "GET",
 				"header": [],

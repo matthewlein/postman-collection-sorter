@@ -46,13 +46,17 @@ const sortItems = (obj) => {
     return obj;
   }
 
-  const itemSorted = _.sortBy(
-    obj.item,
+  const itemSorted = _.sortBy(obj.item, [
+    (item: PostmanRequest | PostmanFolder) => {
+      return item.name.toLowerCase();
+    },
     (item: PostmanRequest | PostmanFolder) => {
       const verbSort = isRequest(item) ? verbMap[item.request.method] : 0;
-      return [item.name.toLowerCase(), verbSort];
-    }
-  );
+      return verbSort;
+    },
+  ]);
+
+  console.log(itemSorted.map((i) => i.name));
 
   return {
     ...obj,
